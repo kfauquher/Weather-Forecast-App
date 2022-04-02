@@ -4,12 +4,16 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>   
+        
+        <!-- Setting the characters, font style and screen scale. -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Weather Forecast Buddy</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Island+Moments&display=swap" rel="stylesheet">
+        
+        <!-- The start of our CSS code -->
         <style> 
             body {
                 font-family: 'Montserrat', sans-serif;
@@ -57,6 +61,8 @@
     <h1>Weather Forecast</h1>
     <div id="forecast"></div>
     <script>
+        
+        <!-- This is getting our current location -->
         let gotPosition = function (pos) {
             let lat = pos.coords.latitude;
             let long = pos.coords.longitude;
@@ -64,12 +70,13 @@
             // console.log(long);
             getForecast(lat, long);
         }
-
+        
+        <!-- This is implimenting the API. Make sure to sign up so you can use your own key! -->
         let getForecast = function (lat, long) {
             let url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&exclude=current,minutely,hourly&appid=INSERT YOUR API KEY HERE";
             getWeatherText(url);
         }
-
+        <!-- Using async simply implies that a promise will be returned, and if a promise is not returned, JavaScript automatically wraps it in a resolved promise with its value. -->
         async function getWeatherText(url) {
             let weatherObject = await fetch(url);
             let weatherText = await weatherObject.text();
@@ -77,7 +84,7 @@
             console.log(weatherText);
             parseWeather(weatherText);
         }
-
+        <!-- This logs the forecast information we are using for each day. -->
         let parseWeather = function (weatherText) {
             let weatherJSON = JSON.parse(weatherText);
             console.log(weatherJSON);
@@ -100,7 +107,8 @@
                 displayWeatherDay(dayOfWeek, description, icon,highTemp, lowTemp, humidity, windSpeed, windGust);
             }
         }
-
+        
+        <!-- This prints the forecast information and icons we are using. -->
         let displayWeatherDay = function (dayOfWeek, description, icon, highTemp, lowTemp, humidity, windSpeed, windGust) {
             let out = "<div class='weatherDay'><img src='http://openweathermap.org/img/wn/" + icon + ".png'/>";
             out += "<h2>" + dayOfWeek + "</h2>";
@@ -111,7 +119,8 @@
             out += "<p>Wind Speed: " + Math.round(windSpeed) + " with gusts up to " + Math.round(windGust) + "</p></div>";
             document.getElementById("forecast").innerHTML += out;
         }
-
+        
+        <!-- Days of the week -->
         let getDayOfWeek = function (dayNum) {
             var weekday = new Array(7);
             weekday[0] = "Sunday";
@@ -124,13 +133,14 @@
 
             return (weekday[dayNum]);
         }
-
+        
+        <!-- The API is default to kelvin so we are changing it to fahrenheit-->
         let kToF = function (kelvinTemp) {
             const celsius = kelvinTemp - 273;
             const fahrenheit = Math.floor(celsius * (9 / 5) + 32);
             return fahrenheit
         }
-
+        
         let timestampToTime = function (timeStamp) {
             let date = new Date(timeStamp * 1000);
             let hours = date.getHours();
